@@ -13,6 +13,12 @@ namespace Leap.Unity
     /** A physics model for our rigid hand made out of various Unity Collider. */
     public class RigidHand : SkeletalHand
     {
+        public int GetId()
+        {
+            return hand_.Id;
+        }
+        
+
         public float GrabStrenghtThreshold = 0.8f;
 
         public HandGesture CurrentGesture
