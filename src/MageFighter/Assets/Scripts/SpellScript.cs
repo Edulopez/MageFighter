@@ -34,7 +34,7 @@ public class SpellScript : MonoBehaviour {
     /// <summary>
     /// Cast spell and destroy it after a few seconds
     /// </summary>
-    public void Cast(float percentageOfPower, float destroyTime = 3f)
+    public void Cast(float percentageOfPower, float destroyTime = 10f)
     {
         damage = _maxDamage * percentageOfPower;
         Cast();
@@ -43,9 +43,9 @@ public class SpellScript : MonoBehaviour {
     /// <summary>
     /// Cast spell and destroy it after a few seconds
     /// </summary>
-    public void Cast( float destroyTime = 3f)
+    public void Cast( float destroyTime = 10f)
     {
-        Invoke("DestroySpell", 3f);
+        Invoke("DestroySpell", destroyTime);
         Casted = true;
     }
 
