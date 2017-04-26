@@ -10,18 +10,17 @@ public class SpellCastingScript : MonoBehaviour {
     private GameObject SpellObject;
 
     public int MaxChargeSpellTime = 3;
-    private float _startedChargeTime = 0;
+    private float _CastingTime = 0;
 
     public float TimeToReleaseSpell = 0.5f;
-    private float _startedReleaseSpellTime = 0;
+    private float _ReleaseSpellTime = 0;
     
     private GUIStyle currentStyle;
     public Texture2D crosshairTexture;
     private Vector2 size = new Vector2(90, 10);
     public Texture2D progressBarEmpty;
     public Texture2D progressBarFull;
-
-    // Use this for initialization
+    
     void Start () {
         _hand = this.GetComponent<RigidHand>();
         Debug.Log(this.name + (_hand == null) );
@@ -77,20 +76,25 @@ public class SpellCastingScript : MonoBehaviour {
     //}
 
     // Update is called once per frame
+
     void Update ()
     {
         if (_hand == null)
             return;
         var gesture = _hand.CurrentGesture;
         Debug.Log(this.name + " "+ gesture);
-        SpellAction(gesture);
+        MakeSpellAction(gesture);
     }
 
-    void SpellAction(HandGesture gesture)
+    /// <summary>
+    /// Make the spell actions depending on the gesture
+    /// </summary>
+    /// <param name="gesture"></param>
+    void MakeSpellAction(HandGesture gesture)
     {
         if (gesture == HandGesture.Closed)
         {
-            ChargeSpell();
+            CastSpell();
         }
         else if (gesture == HandGesture.Open)
         {
@@ -98,13 +102,18 @@ public class SpellCastingScript : MonoBehaviour {
         }
     }
 
-    void ChargeSpell()
+    /// <summary>
+    /// Start the spell casting process
+    /// </summary>
+    void CastSpell()
     {
-        if (_startedChargeTime == 0)
-            _startedChargeTime = LevelManager.GameTimer;
+        if (_CastingTime == 0)
+            _CastingTime = LevelManager.GameTimer;
         
-        SpellObject = ObjectPooling.Current.GetPooledObject();
-        float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _startedChargeTime )/ MaxChargeSpellTime) , 1.0f);
+        if (SpellObject == null)
+            SpellObject = ObjectPooling.Current.GetPooledObject();
+
+        float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _CastingTime )/ MaxChargeSpellTime) , 1.0f);
         float scaleValue = MaxScaleSpellObject * percentaje;
 
         Debug.Log(this.name + ", Charging");
@@ -112,25 +121,33 @@ public class SpellCastingScript : MonoBehaviour {
         SpellObject.transform.position = new Vector3(0, -0.150f, 0);
     }
     
+    /// <summary>
+    /// Release casted spell
+    /// </summary>
     void ReleaseSpell()
     {
-        if (_startedChargeTime == 0) return;
+        if (_CastingTime == 0) return;
 
-        if (_startedReleaseSpellTime == 0)
-            _startedReleaseSpellTime = LevelManager.GameTimer;
+        if (_ReleaseSpellTime == 0)
+            _ReleaseSpellTime = LevelManager.GameTimer;
 
-        if (LevelManager.GameTimer - _startedReleaseSpellTime < TimeToReleaseSpell)
+        // If can release spell
+        if (LevelManager.GameTimer - _ReleaseSpellTime < TimeToReleaseSpell)
             return;
-        _startedChargeTime = 0;
-        _startedReleaseSpellTime = 0;
+
+        // Reset variables
+        ResetTimerVariables();
 
         Debug.Log(this.name + ", Shooting");
-        //SpellObject.transform.localScale = new Vector3(0, 0, 0);
+
+        // Cast spell and release object
         SpellObject.GetComponent<SpellScript>().Cast();
+        SpellObject = null;
     }
 
-    void CastSpell()
+    private void ResetTimerVariables()
     {
-
+        _CastingTime = 0;
+        _ReleaseSpellTime = 0;
     }
 }

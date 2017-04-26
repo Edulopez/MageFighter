@@ -18,6 +18,8 @@ public class ObjectPooling : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        Current = this;
+        pooledObjects = new List<GameObject>();
         for (int i = 0; i < size; i++)
         {
             var obj = (GameObject)Instantiate(pooledObject);
@@ -34,6 +36,7 @@ public class ObjectPooling : MonoBehaviour {
             if (!pooledObjects[i].activeInHierarchy)
             {
                 Debug.Log("Returning Pooled object ID: " + i);
+                pooledObjects[i].SetActive(true);
                 return pooledObjects[i];
             }
         }
