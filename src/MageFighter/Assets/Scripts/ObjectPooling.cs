@@ -32,10 +32,9 @@ public class ObjectPooling : MonoBehaviour {
     {
         for (int i = 0; i < pooledObjects.Count; i++)
         {
-            Debug.Log(pooledObjects[i].activeInHierarchy);
             if (!pooledObjects[i].activeInHierarchy)
             {
-                Debug.Log("Returning Pooled object ID: " + i);
+               // Debug.Log("Returning Pooled object ID: " + i);
                 pooledObjects[i].SetActive(true);
                 return pooledObjects[i];
             }
@@ -45,8 +44,7 @@ public class ObjectPooling : MonoBehaviour {
         {
             var obj = (GameObject)Instantiate(pooledObject);
             pooledObjects.Add(obj);
-            Debug.Log("Returning Pooled object ID: " + (pooledObjects.Count -1));
-
+           // Debug.Log("Returning Pooled object ID: " + (pooledObjects.Count -1));
             return obj;
         }
 

@@ -5,14 +5,16 @@ using Leap.Unity;
 
 public class SpellCastingScript : MonoBehaviour {
 
+
     RigidHand _hand;
+    public GameObject Palm;
     public float MaxScaleSpellObject = 0.5f;
     private GameObject SpellObject;
 
-    public int MaxChargeSpellTime = 3;
+    public int MaxCastingSpellTime = 3;
     private float _CastingTime = 0;
 
-    public float TimeToReleaseSpell = 0.5f;
+    public float TimeToReleaseSpell = 0.01f;
     private float _ReleaseSpellTime = 0;
     
     private GUIStyle currentStyle;
@@ -23,8 +25,12 @@ public class SpellCastingScript : MonoBehaviour {
     
     void Start () {
         _hand = this.GetComponent<RigidHand>();
-        Debug.Log(this.name + (_hand == null) );
+        //Debug.Log(this.name + (_hand == null) );
 	}
+    void Destroy()
+    {
+        Debug.Log(this.name + " Destroyed ");
+    }
 
     private void InitStyles()
     {
@@ -82,7 +88,7 @@ public class SpellCastingScript : MonoBehaviour {
         if (_hand == null)
             return;
         var gesture = _hand.CurrentGesture;
-        Debug.Log(this.name + " "+ gesture);
+       // Debug.Log(this.name + " "+ gesture);
         MakeSpellAction(gesture);
     }
 
@@ -92,7 +98,18 @@ public class SpellCastingScript : MonoBehaviour {
     /// <param name="gesture"></param>
     void MakeSpellAction(HandGesture gesture)
     {
-        if (gesture == HandGesture.Closed)
+        if(SpellObject != null)
+        {
+            SpellObject.transform.position = Palm.transform.position;
+            SpellObject.transform.rotation = Palm.transform.rotation;
+
+        }
+
+        if (gesture == HandGesture.Missing)
+        {
+            ReleaseSpell();
+        }
+        else if(gesture == HandGesture.Closed)
         {
             CastSpell();
         }
@@ -100,6 +117,7 @@ public class SpellCastingScript : MonoBehaviour {
         {
             ReleaseSpell();
         }
+        
     }
 
     /// <summary>
@@ -113,36 +131,36 @@ public class SpellCastingScript : MonoBehaviour {
         if (SpellObject == null)
             SpellObject = ObjectPooling.Current.GetPooledObject();
 
-        float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _CastingTime )/ MaxChargeSpellTime) , 1.0f);
+        float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _CastingTime )/ MaxCastingSpellTime) , 1.0f);
         float scaleValue = MaxScaleSpellObject * percentaje;
 
         Debug.Log(this.name + ", Charging");
+        
         SpellObject.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-        SpellObject.transform.position = new Vector3(0, -0.150f, 0);
     }
     
     /// <summary>
     /// Release casted spell
     /// </summary>
-    void ReleaseSpell()
+    void ReleaseSpell( bool CheckReleaseTime = true)
     {
         if (_CastingTime == 0) return;
 
         if (_ReleaseSpellTime == 0)
             _ReleaseSpellTime = LevelManager.GameTimer;
 
-        // If can release spell
-        if (LevelManager.GameTimer - _ReleaseSpellTime < TimeToReleaseSpell)
-            return;
-
-        // Reset variables
-        ResetTimerVariables();
-
         Debug.Log(this.name + ", Shooting");
 
         // Cast spell and release object
-        SpellObject.GetComponent<SpellScript>().Cast();
+        SpellObject.GetComponent<SpellScript>()
+            .Cast(
+             Mathf.Min(1f,_CastingTime/MaxCastingSpellTime)
+            ,1f, 10f
+            );
+
         SpellObject = null;
+        // Reset variables
+        ResetTimerVariables();
     }
 
     private void ResetTimerVariables()

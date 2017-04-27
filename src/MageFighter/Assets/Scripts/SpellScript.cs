@@ -15,7 +15,7 @@ public class SpellScript : MonoBehaviour {
 
     void OnEnable()
     {
-        Invoke("DestroySpell", 20f);
+        Invoke("DestroySpell", 200f);
     }
     void OnDisabled()
     {
@@ -34,7 +34,7 @@ public class SpellScript : MonoBehaviour {
     /// <summary>
     /// Cast spell and destroy it after a few seconds
     /// </summary>
-    public void Cast(float percentageOfPower, float destroyTime = 10f)
+    public void Cast(float percentageOfPower,float spellSpeed = 1, float destroyTime = 10f)
     {
         damage = _maxDamage * percentageOfPower;
         Cast();
@@ -43,7 +43,7 @@ public class SpellScript : MonoBehaviour {
     /// <summary>
     /// Cast spell and destroy it after a few seconds
     /// </summary>
-    public void Cast( float destroyTime = 10f)
+    public void Cast(  float spellSpeed = 1, float destroyTime = 10f)
     {
         Invoke("DestroySpell", destroyTime);
         Casted = true;
@@ -53,8 +53,8 @@ public class SpellScript : MonoBehaviour {
     {
         if (Casted)
         {
-            Direction = Vector3.forward;
-            Direction.z = Direction.z * speed * Time.deltaTime;
+            Direction = Vector3.down;
+            Direction = Direction * speed * Time.deltaTime;
             this.transform.Translate(Direction);
         }
     }
