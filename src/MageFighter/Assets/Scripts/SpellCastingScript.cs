@@ -27,6 +27,10 @@ public class SpellCastingScript : MonoBehaviour {
         _hand = this.GetComponent<RigidHand>();
         //Debug.Log(this.name + (_hand == null) );
 	}
+    void OnDisable()
+    {
+        ReleaseSpell();
+    }
     void Destroy()
     {
         Debug.Log(this.name + " Destroyed ");
@@ -102,7 +106,6 @@ public class SpellCastingScript : MonoBehaviour {
         {
             SpellObject.transform.position = Palm.transform.position;
             SpellObject.transform.rotation = Palm.transform.rotation;
-
         }
 
         if (gesture == HandGesture.Missing)

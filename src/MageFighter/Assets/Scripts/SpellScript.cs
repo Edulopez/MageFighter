@@ -17,7 +17,7 @@ public class SpellScript : MonoBehaviour {
     {
         Invoke("DestroySpell", 200f);
     }
-    void OnDisabled()
+    void OnDisable()
     {
         CancelInvoke();
     }
