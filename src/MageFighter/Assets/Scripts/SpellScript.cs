@@ -4,7 +4,7 @@ using System.Collections;
 public class SpellScript : MonoBehaviour {
 
     private int _maxDamage = 500;
-    public float damage = 10;
+    public int damage = 10;
 
     private int _maxSpeed = 10;
     public float speed = 1;
@@ -36,7 +36,7 @@ public class SpellScript : MonoBehaviour {
     /// </summary>
     public void Cast(float percentageOfPower,float spellSpeed = 1, float destroyTime = 10f)
     {
-        damage = _maxDamage * percentageOfPower;
+        damage = (int)(_maxDamage * percentageOfPower);
         Cast();
     }
 
@@ -47,6 +47,24 @@ public class SpellScript : MonoBehaviour {
     {
         Invoke("DestroySpell", destroyTime);
         Casted = true;
+    }
+    
+
+    void OnCollisionEnter(Collision collitionInfo)
+    {
+
+        Debug.Log("Hit");
+        if (!Casted)
+            return;
+
+        if(collitionInfo.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Enemy hit)");
+            var enemy = collitionInfo.gameObject.GetComponent<Enemy>();
+            enemy.GetHit(damage);
+        }
+
+        Destroy();
     }
 
     public void Update()
