@@ -13,8 +13,19 @@ public class SpellScript : MonoBehaviour {
 
     public bool Casted = false;
 
+    public AudioClip CastinAudio;
+    public AudioClip ReleaseAudio;
+    
     void OnEnable()
     {
+        var audio = this.GetComponent<AudioSource>();
+
+        if (audio != null)
+        {
+            audio.clip = CastinAudio;
+            audio.loop = true;
+            audio.Play();
+        }
         Invoke("DestroySpell", 200f);
     }
     void OnDisable()
@@ -37,12 +48,19 @@ public class SpellScript : MonoBehaviour {
     {
         damage =  (int) ( Mathf.Max(1,(_maxDamage * percentageOfPower)));
         Debug.Log("Casting spell " + damage);
+        var audio = this.GetComponent<AudioSource>();
+
+        if (audio != null)
+        {
+            audio.clip = ReleaseAudio;
+            audio.loop = false;
+            audio.Play();
+        }
+
         Invoke("DestroySpell", destroyTime);
         Casted = true;
     }
-
-   
-    
+ 
 
     void OnCollisionEnter(Collision collitionInfo)
     {
