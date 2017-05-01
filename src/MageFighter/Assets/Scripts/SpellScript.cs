@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpellScript : MonoBehaviour {
 
-    private int _maxDamage = 500;
+    private int _maxDamage = 100;
     public int damage = 10;
 
     private int _maxSpeed = 10;
@@ -27,7 +27,6 @@ public class SpellScript : MonoBehaviour {
     }
     void DestroySpell()
     {
-        Debug.Log("Destroying spell");
         gameObject.SetActive(false);
     }
 
@@ -36,35 +35,31 @@ public class SpellScript : MonoBehaviour {
     /// </summary>
     public void Cast(float percentageOfPower,float spellSpeed = 1, float destroyTime = 10f)
     {
-        damage = (int)(_maxDamage * percentageOfPower);
-        Cast();
-    }
-
-    /// <summary>
-    /// Cast spell and destroy it after a few seconds
-    /// </summary>
-    public void Cast(  float spellSpeed = 1, float destroyTime = 10f)
-    {
+        damage =  (int) ( Mathf.Max(1,(_maxDamage * percentageOfPower)));
+        Debug.Log("Casting spell " + damage);
         Invoke("DestroySpell", destroyTime);
         Casted = true;
     }
+
+   
     
 
     void OnCollisionEnter(Collision collitionInfo)
     {
-
-        Debug.Log("Hit");
         if (!Casted)
             return;
 
         if(collitionInfo.gameObject.tag == "Enemy")
         {
-            Debug.Log("Enemy hit)");
+            //Debug.Log("Enemy hit)");
             var enemy = collitionInfo.gameObject.GetComponent<Enemy>();
-            enemy.GetHit(damage);
+            if (!enemy.IsDead)
+            {
+                Destroy();
+                enemy.GetHit(damage);
+            }
         }
 
-        Destroy();
     }
 
     public void Update()

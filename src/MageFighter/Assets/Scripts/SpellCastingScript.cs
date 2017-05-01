@@ -137,8 +137,6 @@ public class SpellCastingScript : MonoBehaviour {
         float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _CastingTime )/ MaxCastingSpellTime) , 1.0f);
         float scaleValue = MaxScaleSpellObject * percentaje;
 
-        Debug.Log(this.name + ", Charging");
-        
         SpellObject.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
     }
     
@@ -152,12 +150,12 @@ public class SpellCastingScript : MonoBehaviour {
         if (_ReleaseSpellTime == 0)
             _ReleaseSpellTime = LevelManager.GameTimer;
 
-        Debug.Log(this.name + ", Shooting");
+        float percentaje = Mathf.Min(Mathf.Abs((LevelManager.GameTimer - _CastingTime) / MaxCastingSpellTime), 1.0f);
+        //Debug.Log(this.name + ", Shooting - " + percentaje);
 
         // Cast spell and release object
         SpellObject.GetComponent<SpellScript>()
-            .Cast(
-             Mathf.Min(1f,_CastingTime/MaxCastingSpellTime)
+            .Cast(Mathf.Min(1f, percentaje)
             ,1f, 10f
             );
 

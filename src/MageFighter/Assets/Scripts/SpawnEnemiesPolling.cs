@@ -18,7 +18,6 @@ public class SpawnEnemiesPolling : ObjectPooling
             return null;
         int position = Random.Range(0, spawnPositions.Count);
         var spawn = spawnPositions[position];
-        Debug.Log("Spawing on " + position);
 
         return spawn;
     }
@@ -34,6 +33,8 @@ public class SpawnEnemiesPolling : ObjectPooling
         if (enemy == null)
             yield break;
         yield return new WaitForSeconds(seconds);
+        Debug.Log(spawn.transform.position);
+        enemy.transform.position = spawn.transform.position;
         Instantiate(enemy, spawn.transform.position, spawn.transform.rotation);
     
         _isSpawning = false;

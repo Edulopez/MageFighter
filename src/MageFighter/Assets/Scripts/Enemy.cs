@@ -5,8 +5,14 @@ public class Enemy : MonoBehaviour {
 
     public int Damage = 1;
     public int Speed = 1;
-    public int Health = 1;
+    public int BackSpeed = 5;
+
+    private int _initialHealth;
+    public int Health = 50;
     public bool CanMove = false;
+
+    private Animator _animator;
+    private bool _isTakingDamage = false;
 
     Rigidbody _rigibody = null;
     Rigidbody LocalRigibody
@@ -22,8 +28,7 @@ public class Enemy : MonoBehaviour {
             return _rigibody;
         }
     }
-
-
+    
     static GameObject _player = null;
     public GameObject Player
     {
@@ -39,10 +44,17 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    public bool IsDead
+    {
+        get
+        { return Health < 1; }
+    }
+
 	void Start ()
     {
-	
-	}
+        _initialHealth = Health;
+        _animator = this.GetComponent<Animator>();
+    }
 
     void OnDisable()
     {
@@ -51,18 +63,37 @@ public class Enemy : MonoBehaviour {
 
     void Destroy()
     {
+        Reset();
         gameObject.SetActive(false);
+    }
+    void Reset()
+    {
+        CanMove = true;
+        Health = _initialHealth;
+        _animator.SetBool("IsTakingDamage", false);
+        _animator.SetBool("IsDead", false);
+        LocalRigibody.velocity = Vector3.zero;
+        var body = this.GetComponent<Rigidbody>();
+        if (body != null)
+        {
+            body.detectCollisions = true;
+            body.useGravity = true;
+        }
     }
 
     void Update ()
     {
         CheckStatus();
         FacePlayer();
-
-        if(CanMove)
+        if (_isTakingDamage && CanMove)
+        {
+            this.transform.Translate(Vector3.back * BackSpeed * Time.deltaTime);
+        }
+        else if (CanMove)
         {
             this.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
         }
+       
         if(Vector3.Distance(this.transform.position,_player.transform.position) <= 1)
         {
             CanMove = false;
@@ -73,8 +104,8 @@ public class Enemy : MonoBehaviour {
     //@TODO Remove this
     void FixPosition()
     {
-        if (this.transform.position.y < 0)
-            this.transform.position = new Vector3(this.transform.position.x, 5, this.transform.position.z);
+        if (this.transform.position.y < -10)
+            Destroy();
     }
 
     void FacePlayer()
@@ -87,14 +118,37 @@ public class Enemy : MonoBehaviour {
         if (Health <= 0)
         {
             Invoke("Destroy", 4f);
-            var animator = this.GetComponent<Animator>();
-            if(animator != null)
-                animator.SetBool("IsDead", true);
+            if(_animator != null)
+                _animator.SetBool("IsDead", true);
+
+            var body = this.GetComponent<Rigidbody>();
+            if (body != null)
+            {
+                body.detectCollisions = false;
+                body.useGravity = false;
+            }
         }
     }
 
     public void GetHit(int damage)
     {
+        Debug.Log("Damage " + damage);
+
+        Debug.Log("Health " + Health);
         Health -= damage;
+        Debug.Log("Health " + Health);
+
+        if (_animator != null)
+            _animator.SetBool("IsTakingDamage", true);
+
+        this.transform.Translate(Vector3.back * Time.deltaTime);
+
+        StartCoroutine(SetAnimationVariable("IsTakingDamage", 1f, false));
+    }
+
+    IEnumerator SetAnimationVariable(string varNAme , float time, bool value)
+    {
+        yield return new WaitForSeconds(1f);
+        _animator.SetBool(varNAme, false);
     }
 }
