@@ -11,12 +11,12 @@ public class ObjectPooling : MonoBehaviour {
     public List<GameObject> pooledObjects;
     public bool willGrow = true;
 
-    void Awake()
+    protected void Awake()
     {
         Current = this;
     }
 	// Use this for initialization
-	void Start ()
+	protected void Start ()
     {
         Current = this;
         pooledObjects = new List<GameObject>();
@@ -49,5 +49,17 @@ public class ObjectPooling : MonoBehaviour {
         }
 
         return null;
+    }
+
+    public int GetActiveAmount()
+    {
+        var res = 0;
+
+        for(int i = 0; i < pooledObjects.Count; i++)
+        {
+            if (pooledObjects[i].activeInHierarchy)
+                res++;
+        }
+        return res;
     }
 }

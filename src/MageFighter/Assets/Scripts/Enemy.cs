@@ -8,8 +8,23 @@ public class Enemy : MonoBehaviour {
     public int Health = 1;
     public bool CanMove = false;
 
-    Rigidbody _rigibody;
-    GameObject _player = null;
+    Rigidbody _rigibody = null;
+    Rigidbody LocalRigibody
+    {
+        get
+        {
+            if (_rigibody == null)
+            {
+                var res = this.GetComponent<Rigidbody>();
+                if (res != null)
+                    _rigibody = res;
+            }
+            return _rigibody;
+        }
+    }
+
+
+    static GameObject _player = null;
     public GameObject Player
     {
         get
@@ -47,10 +62,20 @@ public class Enemy : MonoBehaviour {
         if(CanMove)
         {
             this.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-            
         }
+        if(Vector3.Distance(this.transform.position,_player.transform.position) <= 1)
+        {
+            CanMove = false;
+            LocalRigibody.velocity = Vector3.zero;
+        }
+        FixPosition();
     }
-
+    //@TODO Remove this
+    void FixPosition()
+    {
+        if (this.transform.position.y < 0)
+            this.transform.position = new Vector3(this.transform.position.x, 5, this.transform.position.z);
+    }
 
     void FacePlayer()
     {
