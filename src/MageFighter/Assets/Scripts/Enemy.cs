@@ -93,14 +93,18 @@ public class Enemy : MonoBehaviour {
         {
             this.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
         }
-       
-        if(Vector3.Distance(this.transform.position,_player.transform.position) <= 1)
+
+        if (Vector3.Distance(this.transform.position, _player.transform.position) <= 1)
         {
             CanMove = false;
             LocalRigibody.velocity = Vector3.zero;
         }
+        else
+            CanMove = true;
+
         FixPosition();
     }
+
     //@TODO Remove this
     void FixPosition()
     {
@@ -115,7 +119,7 @@ public class Enemy : MonoBehaviour {
 
     void CheckStatus()
     {
-        if (Health <= 0)
+        if (IsDead)
         {
             Invoke("Destroy", 4f);
             if(_animator != null)
@@ -132,11 +136,7 @@ public class Enemy : MonoBehaviour {
 
     public void GetHit(int damage)
     {
-        Debug.Log("Damage " + damage);
-
-        Debug.Log("Health " + Health);
         Health -= damage;
-        Debug.Log("Health " + Health);
 
         if (_animator != null)
             _animator.SetBool("IsTakingDamage", true);

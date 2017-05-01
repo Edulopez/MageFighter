@@ -35,7 +35,7 @@ public class SpawnEnemiesPolling : ObjectPooling
         yield return new WaitForSeconds(seconds);
         Debug.Log(spawn.transform.position);
         enemy.transform.position = spawn.transform.position;
-        Instantiate(enemy, spawn.transform.position, spawn.transform.rotation);
+        Instantiate(enemy);
     
         _isSpawning = false;
     }
