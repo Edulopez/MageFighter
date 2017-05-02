@@ -14,7 +14,7 @@ public class SpellScript : MonoBehaviour {
     public bool Casted = false;
 
     public AudioClip CastinAudio;
-    public AudioClip ReleaseAudio;
+    public AudioClip ReleaseAudio;  
     
     void OnEnable()
     {
@@ -47,7 +47,7 @@ public class SpellScript : MonoBehaviour {
     public void Cast(float percentageOfPower,float spellSpeed = 1, float destroyTime = 10f)
     {
         damage =  (int) ( Mathf.Max(1,(_maxDamage * percentageOfPower)));
-        Debug.Log("Casting spell " + damage);
+        //Debug.Log("Casting spell " + damage);
         var audio = this.GetComponent<AudioSource>();
 
         if (audio != null)
@@ -60,7 +60,6 @@ public class SpellScript : MonoBehaviour {
         Invoke("DestroySpell", destroyTime);
         Casted = true;
     }
- 
 
     void OnCollisionEnter(Collision collitionInfo)
     {
@@ -71,9 +70,11 @@ public class SpellScript : MonoBehaviour {
         {
             //Debug.Log("Enemy hit)");
             var enemy = collitionInfo.gameObject.GetComponent<Enemy>();
+            if (enemy == null) return;
             if (!enemy.IsDead)
             {
-                Destroy();
+                if( damage/_maxDamage <= 0.5)
+                    Destroy();
                 enemy.GetHit(damage);
             }
         }

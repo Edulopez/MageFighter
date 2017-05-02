@@ -50,6 +50,8 @@ public class Enemy : MonoBehaviour {
         { return Health < 1; }
     }
 
+    public AudioClip HurtSound = null;
+
 	void Start ()
     {
         _initialHealth = Health;
@@ -142,6 +144,9 @@ public class Enemy : MonoBehaviour {
             _animator.SetBool("IsTakingDamage", true);
 
         this.transform.Translate(Vector3.back * Time.deltaTime);
+
+       var audioSource = this.GetComponent<AudioSource>();
+        audioSource.PlayOneShot(HurtSound);
 
         StartCoroutine(SetAnimationVariable("IsTakingDamage", 1f, false));
     }

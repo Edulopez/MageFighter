@@ -37,7 +37,6 @@ public class LevelManager : MonoBehaviour {
         else
         {
            // StartCoroutine("EndGame");
-
         }
         // increment timer over time
         _timer += Time.deltaTime;

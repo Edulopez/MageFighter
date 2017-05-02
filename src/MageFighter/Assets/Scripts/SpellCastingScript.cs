@@ -150,7 +150,7 @@ public class SpellCastingScript : MonoBehaviour {
             _ReleaseSpellTime = LevelManager.GameTimer;
 
         float percentaje = Mathf.Min(Mathf.Abs((LevelManager.GameTimer - _CastingTime) / MaxCastingSpellTime), 1.0f);
-        //Debug.Log(this.name + ", Shooting - " + percentaje);
+        Debug.Log(this.name + ", Shooting - " + percentaje);
 
         // Cast spell and release object
         SpellObject.GetComponent<SpellScript>()
