@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour {
             this.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
         }
 
-        if (Vector3.Distance(this.transform.position, _player.transform.position) <= 1)
+        if (Vector3.Distance(this.transform.position, _player.transform.position) <= 4)
         {
             CanMove = false;
             LocalRigibody.velocity = Vector3.zero;
