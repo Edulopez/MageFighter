@@ -37,6 +37,8 @@ public class Enemy : MonoBehaviour {
             if (_player == null)
             {
                 var res = GameObject.FindGameObjectsWithTag("Player");
+
+                Debug.Log(res[0].name);
                 if (res != null && res.Length > 0)
                     _player = res[0];
             }
