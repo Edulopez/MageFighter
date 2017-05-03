@@ -37,6 +37,8 @@ public class Enemy : MonoBehaviour {
             if (_player == null)
             {
                 var res = GameObject.FindGameObjectsWithTag("Player");
+
+                Debug.Log(res[0].name);
                 if (res != null && res.Length > 0)
                     _player = res[0];
             }
@@ -96,7 +98,7 @@ public class Enemy : MonoBehaviour {
             this.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
         }
 
-        if (Vector3.Distance(this.transform.position, _player.transform.position) <= 1)
+        if (Vector3.Distance(this.transform.position, _player.transform.position) <= 4)
         {
             CanMove = false;
             LocalRigibody.velocity = Vector3.zero;
