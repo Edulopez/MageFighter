@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Assets.Scripts.Characters;
 
 public class LevelManager : MonoBehaviour {
 
     public Text countDownText;
+
+    public Text PointsText;
+
     private static float _timer = 0;
     public float maxTime = 0;
     public AudioClip finalSound;
@@ -13,34 +17,29 @@ public class LevelManager : MonoBehaviour {
     public GameObject BoosPoolingPoolingObject;
     public static float GameTimer { get { return _timer; } private set { } }
 
-    private bool FirstBossSpawn = false;
-    private bool SecondBossSpawn = false;
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        UpdateTime();
-        TimeEvents();
+    private bool bossSpawn = false;
+    
+    public  GameObject player = null;
 
+    private PlayerStats _playerStats;
+
+    protected void Start()
+    {
+        _playerStats = player.GetComponent<PlayerStats>();
+    }
+    // Update is called once per frame
+    void Update () {
+
+        UpdateUI();
+        TimeEvents();
     }
 
     private void TimeEvents()
     {
-        if(!FirstBossSpawn && _timer > 80)
+        if(!bossSpawn && _timer > 10)
         {
-            FirstBossSpawn = true;
-            var objectPooling = BoosPoolingPoolingObject.GetComponent<SpawnEnemiesPolling>();
-            objectPooling.spawnInterval = 8;
-        }
-
-        if (!SecondBossSpawn && _timer > 80)
-        {
-            SecondBossSpawn = true;
-            var objectPooling = BoosPoolingPoolingObject.GetComponent<SpawnEnemiesPolling>();
-            objectPooling.spawnInterval = 8;
+            bossSpawn = true;
+            BoosPoolingPoolingObject.SetActive(true);
         }
 
 
@@ -71,5 +70,12 @@ public class LevelManager : MonoBehaviour {
 
         gameObject.GetComponent<AudioSource>().PlayOneShot(finalSound);
         //Application.LoadLevel("Result");
+    }
+
+    void UpdateUI()
+    {
+        UpdateTime();
+
+        PointsText.text = _playerStats.points.ToString();
     }
 }

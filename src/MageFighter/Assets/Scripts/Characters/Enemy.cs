@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Characters;
 
 public class Enemy : MonoBehaviour {
 
     public int Damage = 1;
     public int Speed = 1;
     public int BackSpeed = 5;
+    public int points = 2;
 
     protected int _initialHealth;
     public int Health = 50;
@@ -50,6 +52,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    protected bool IsRewardGiven = false;
     public bool IsDead
     {
         get
@@ -76,6 +79,7 @@ public class Enemy : MonoBehaviour {
     }
     protected void Reset()
     {
+        IsRewardGiven = false;
         CanMove = true;
         Health = _initialHealth;
         _animator.SetBool("IsTakingDamage", false);
@@ -138,6 +142,13 @@ public class Enemy : MonoBehaviour {
             {
                 body.detectCollisions = false;
                 body.useGravity = false;
+            }
+
+            if(!IsRewardGiven)
+            {
+                var playerStats = Player.GetComponent<PlayerStats>();
+                playerStats.AddPoints(points);
+                IsRewardGiven = true;
             }
         }
     }
