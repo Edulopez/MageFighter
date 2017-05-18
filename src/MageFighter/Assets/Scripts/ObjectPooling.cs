@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ObjectPooling : MonoBehaviour {
 
-    public static ObjectPooling Current;
+   // public static ObjectPooling Current;
     public int size = 10;
 
     public GameObject pooledObject;
@@ -13,12 +13,12 @@ public class ObjectPooling : MonoBehaviour {
 
     protected void Awake()
     {
-        Current = this;
+        //Current = this;
     }
 	// Use this for initialization
 	protected void Start ()
     {
-        Current = this;
+       // Current = this;
         pooledObjects = new List<GameObject>();
         for (int i = 0; i < size; i++)
         {

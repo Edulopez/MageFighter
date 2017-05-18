@@ -23,9 +23,13 @@ public class SpellCastingScript : MonoBehaviour {
     private Vector2 size = new Vector2(90, 10);
     public Texture2D progressBarEmpty;
     public Texture2D progressBarFull;
-    
+
+    private ObjectPooling _spellPooling;
+    public GameObject spellsPoolObject;
+
     void Start () {
         _hand = this.GetComponent<RigidHand>();
+        _spellPooling = spellsPoolObject.GetComponent<ObjectPooling>();
         //Debug.Log(this.name + (_hand == null) );
 	}
     void OnDisable()
@@ -132,7 +136,7 @@ public class SpellCastingScript : MonoBehaviour {
             _CastingTime = LevelManager.GameTimer;
         
         if (SpellObject == null)
-            SpellObject = ObjectPooling.Current.GetPooledObject();
+            SpellObject = _spellPooling.GetPooledObject();
 
         float percentaje = Mathf.Min( Mathf.Abs( (LevelManager.GameTimer - _CastingTime )/ MaxCastingSpellTime) , 1.0f);
         float scaleValue = MaxScaleSpellObject * percentaje;
