@@ -40,6 +40,7 @@ public class LevelManager : MonoBehaviour {
         {
             bossSpawn = true;
             BoosPoolingPoolingObject.SetActive(true);
+            Debug.Log("Starting - Summoning Demons");
         }
 
 
