@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Interfaces;
+using System;
 
-public class SpellScript : MonoBehaviour {
+public class SpellScript :  MonoBehaviour , ISpell{
 
     private int _maxDamage = 100;
     public int damage = 10;
@@ -9,13 +11,13 @@ public class SpellScript : MonoBehaviour {
     private int _maxSpeed = 10;
     public float speed = 1;
 
-    private Vector3 Direction = Vector3.forward;
+    private Vector3 _direction = Vector3.forward;
 
-    public bool Casted = false;
+    public bool isCasted = false;
 
     public AudioClip CastinAudio;
-    public AudioClip ReleaseAudio;  
-    
+    public AudioClip ReleaseAudio;
+
     void OnEnable()
     {
         var audio = this.GetComponent<AudioSource>();
@@ -44,9 +46,9 @@ public class SpellScript : MonoBehaviour {
     /// <summary>
     /// Cast spell and destroy it after a few seconds
     /// </summary>
-    public void Cast(float percentageOfPower,float spellSpeed = 1, float destroyTime = 10f)
+    public void Cast(float percentageOfPower, float spellSpeed = 1, float destroyTime = 10f)
     {
-        damage =  (int) ( Mathf.Max(1,(_maxDamage * percentageOfPower)));
+        damage = (int)(Mathf.Max(1, (_maxDamage * percentageOfPower)));
         //Debug.Log("Casting spell " + damage);
         var audio = this.GetComponent<AudioSource>();
 
@@ -58,36 +60,42 @@ public class SpellScript : MonoBehaviour {
         }
 
         Invoke("DestroySpell", destroyTime);
-        Casted = true;
+        isCasted = true;
+    }
+
+
+    public void Cast(Vector3 direction, float percentageOfPower, float spellSpeed = 1, float destroyTime = 10)
+    {
+        throw new NotImplementedException();
     }
 
     void OnCollisionEnter(Collision collitionInfo)
     {
-        if (!Casted)
+        if (!isCasted)
             return;
 
-        if(collitionInfo.gameObject.tag == "Enemy")
+        if (collitionInfo.gameObject.tag == "Enemy")
         {
-            //Debug.Log("Enemy hit)");
+            Debug.Log("Enemy hit)");
             var enemy = collitionInfo.gameObject.GetComponent<Enemy>();
             if (enemy == null) return;
             if (!enemy.IsDead)
             {
-                if( damage/_maxDamage <= 0.5)
+                if (damage / _maxDamage <= 0.5)
                     Destroy();
                 enemy.GetHit(damage);
             }
         }
-
     }
 
     public void Update()
     {
-        if (Casted)
+        if (isCasted)
         {
-            Direction = Vector3.down;
-            Direction = Direction * speed * Time.deltaTime;
-            this.transform.Translate(Direction);
+            _direction = Vector3.down;
+            _direction = _direction * speed * Time.deltaTime;
+            this.transform.Translate(_direction);
         }
     }
+
 }

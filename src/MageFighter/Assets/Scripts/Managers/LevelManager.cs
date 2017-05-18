@@ -7,10 +7,14 @@ public class LevelManager : MonoBehaviour {
     public Text countDownText;
     private static float _timer = 0;
     public float maxTime = 0;
-
     public AudioClip finalSound;
 
+    public GameObject enemiesPoolingObject;
+    public GameObject BoosPoolingPoolingObject;
     public static float GameTimer { get { return _timer; } private set { } }
+
+    private bool FirstBossSpawn = false;
+    private bool SecondBossSpawn = false;
     // Use this for initialization
     void Start () {
 	
@@ -24,7 +28,23 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void TimeEvents()
-    { }
+    {
+        if(!FirstBossSpawn && _timer > 80)
+        {
+            FirstBossSpawn = true;
+            var objectPooling = BoosPoolingPoolingObject.GetComponent<SpawnEnemiesPolling>();
+            objectPooling.spawnInterval = 8;
+        }
+
+        if (!SecondBossSpawn && _timer > 80)
+        {
+            SecondBossSpawn = true;
+            var objectPooling = BoosPoolingPoolingObject.GetComponent<SpawnEnemiesPolling>();
+            objectPooling.spawnInterval = 8;
+        }
+
+
+    }
 
     void UpdateTime()
     {

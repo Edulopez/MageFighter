@@ -2,6 +2,7 @@
 using System.Collections;
 using Leap;
 using Leap.Unity;
+using Assets.Scripts.Interfaces;
 
 public class SpellCastingScript : MonoBehaviour {
 
@@ -150,15 +151,17 @@ public class SpellCastingScript : MonoBehaviour {
             _ReleaseSpellTime = LevelManager.GameTimer;
 
         float percentaje = Mathf.Min(Mathf.Abs((LevelManager.GameTimer - _CastingTime) / MaxCastingSpellTime), 1.0f);
-        Debug.Log(this.name + ", Shooting - " + percentaje);
 
+
+        var direction = Palm.transform.rotation;
         // Cast spell and release object
-        SpellObject.GetComponent<SpellScript>()
+        SpellObject.GetComponent<ISpell>()
             .Cast(Mathf.Min(1f, percentaje)
             ,1f, 10f
             );
 
         SpellObject = null;
+
         // Reset variables
         ResetTimerVariables();
     }

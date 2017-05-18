@@ -8,7 +8,8 @@ public class SpawnEnemiesPolling : ObjectPooling
     private int _lastSpawnPosition = -1;
     public List<GameObject> spawnPositions;
 
-    public int SpawnInterval = 3;
+    public bool autoSpawn = true;
+    public int spawnInterval = 3;
     private float _lastSPawnTime = 0;
     private bool _isSpawning = false;
     
@@ -33,7 +34,7 @@ public class SpawnEnemiesPolling : ObjectPooling
         if (enemy == null)
             yield break;
         yield return new WaitForSeconds(seconds);
-        Debug.Log(spawn.transform.position);
+        //Debug.Log(spawn.transform.position);
         enemy.transform.position = spawn.transform.position;
         Instantiate(enemy);
     
@@ -43,10 +44,15 @@ public class SpawnEnemiesPolling : ObjectPooling
     void Update()
     {
 
-        if (!_isSpawning)
+        if (!_isSpawning && autoSpawn)
         {
-            _isSpawning = true;
-            StartCoroutine(SpawnEnemy(Random.Range(0, spawnPositions.Count), SpawnInterval));
+            Spawn();
         }
+    }
+
+    public void Spawn()
+    {
+        _isSpawning = true;
+        StartCoroutine(SpawnEnemy(Random.Range(0, spawnPositions.Count), spawnInterval));
     }
 }
