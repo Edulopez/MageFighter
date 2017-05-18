@@ -7,15 +7,18 @@ public class Enemy : MonoBehaviour {
     public int Speed = 1;
     public int BackSpeed = 5;
 
-    private int _initialHealth;
+    protected int _initialHealth;
     public int Health = 50;
     public bool CanMove = false;
 
-    private Animator _animator;
-    private bool _isTakingDamage = false;
+    protected Animator _animator;
+    protected bool _isTakingDamage = false;
 
-    Rigidbody _rigibody = null;
-    Rigidbody LocalRigibody
+    [HideInInspector]
+    public Rigidbody _rigibody = null;
+
+    [HideInInspector]
+    public Rigidbody LocalRigibody
     {
         get
         {
@@ -28,8 +31,9 @@ public class Enemy : MonoBehaviour {
             return _rigibody;
         }
     }
-    
-    static GameObject _player = null;
+
+    [HideInInspector]
+    public static GameObject _player = null;
     public GameObject Player
     {
         get
@@ -54,23 +58,23 @@ public class Enemy : MonoBehaviour {
 
     public AudioClip HurtSound = null;
 
-	void Start ()
+    protected void Start ()
     {
         _initialHealth = Health;
         _animator = this.GetComponent<Animator>();
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         CancelInvoke();
     }
 
-    void Destroy()
+    protected void Destroy()
     {
         Reset();
         gameObject.SetActive(false);
     }
-    void Reset()
+    protected void Reset()
     {
         CanMove = true;
         Health = _initialHealth;
@@ -85,7 +89,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void Update ()
+    protected void Update ()
     {
         CheckStatus();
         FacePlayer();
@@ -110,18 +114,18 @@ public class Enemy : MonoBehaviour {
     }
 
     //@TODO Remove this
-    void FixPosition()
+    protected void FixPosition()
     {
         if (this.transform.position.y < -10)
             Destroy();
     }
 
-    void FacePlayer()
+    protected void FacePlayer()
     {
         this.transform.LookAt(Player.transform);
     }
 
-    void CheckStatus()
+    protected void CheckStatus()
     {
         if (IsDead)
         {
@@ -153,7 +157,7 @@ public class Enemy : MonoBehaviour {
         StartCoroutine(SetAnimationVariable("IsTakingDamage", 1f, false));
     }
 
-    IEnumerator SetAnimationVariable(string varNAme , float time, bool value)
+    protected IEnumerator SetAnimationVariable(string varNAme , float time, bool value)
     {
         yield return new WaitForSeconds(1f);
         _animator.SetBool(varNAme, false);
