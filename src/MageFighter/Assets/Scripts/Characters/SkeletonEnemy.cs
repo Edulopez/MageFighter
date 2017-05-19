@@ -21,7 +21,6 @@ namespace Assets.Scripts.Characters
         {
             if (IsDead)
             {
-                Invoke("Destroy", 1f);
                 if (_animator != null)
                     _animator.SetBool("IsDead", true);
 
@@ -38,6 +37,8 @@ namespace Assets.Scripts.Characters
                     playerStats.AddPoints(points);
                     IsRewardGiven = true;
                 }
+                Debug.Log("Killing skeleton");
+                Destroy();
             }
         }
     }
