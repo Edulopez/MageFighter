@@ -61,6 +61,8 @@ public class Enemy : MonoBehaviour {
 
     public AudioClip HurtSound = null;
 
+
+
     protected void Start ()
     {
         _initialHealth = Health;
@@ -114,6 +116,7 @@ public class Enemy : MonoBehaviour {
         else
             CanMove = true;
 
+        _animator.SetBool("IsWalking", CanMove);
         FixPosition();
     }
 

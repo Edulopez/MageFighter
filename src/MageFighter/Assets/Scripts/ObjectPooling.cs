@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ObjectPooling : MonoBehaviour {
-
-   // public static ObjectPooling Current;
+public class ObjectPooling : MonoBehaviour
+{
+    
     public int size = 10;
 
     public GameObject pooledObject;
@@ -13,7 +13,6 @@ public class ObjectPooling : MonoBehaviour {
 
     protected void Awake()
     {
-        //Current = this;
     }
 	// Use this for initialization
 	protected void Start ()

@@ -33,9 +33,10 @@ public class SpawnEnemiesPolling : ObjectPooling
         var enemy = GetPooledObject();
         if (enemy == null)
             yield break;
+        enemy.transform.position = spawn.transform.position;
+
         yield return new WaitForSeconds(seconds);
         //Debug.Log(spawn.transform.position);
-        enemy.transform.position = spawn.transform.position;
         Instantiate(enemy);
     
         _isSpawning = false;
@@ -43,7 +44,6 @@ public class SpawnEnemiesPolling : ObjectPooling
 
     void Update()
     {
-
         if (!_isSpawning && autoSpawn)
         {
             Spawn();
