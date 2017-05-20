@@ -136,7 +136,7 @@ public class Enemy : MonoBehaviour {
     {
         if (IsDead)
         {
-            Invoke("Destroy", 4f);
+            Invoke("Destroy", 1f);
             if(_animator != null)
                 _animator.SetBool("IsDead", true);
 
