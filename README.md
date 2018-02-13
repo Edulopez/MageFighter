@@ -8,8 +8,8 @@ Create a VR experience where the users doesn’t need to use any extra tool than
 # Tech
 This prototype use:
 
-Unity game Engine
-Leap Motion
-HTC Vive
-C#
+Unity game Engine <br/>
+Leap Motion <br/>
+HTC Vive <br/>
+C# <br/>
 
